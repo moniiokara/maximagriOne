@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:maximagri/models/order_model/single_order_model.dart';
 
@@ -9,98 +10,179 @@ class DisplayOrderDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(14.0),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+       // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Order No:',
-                  style:
-                  TextStyle(fontSize: 16, fontWeight: FontWeight.normal)),
-              Text(orderDetails.orderSerial),
+              const Text(
+                'Order No:',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                orderDetails.orderSerial,
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Dealer Name:',
-                  style:
-                  TextStyle(fontSize: 16, fontWeight: FontWeight.normal)),
-              Text(orderDetails.dealerName),
+              const Text(
+                'Dealer Name:',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                orderDetails.dealerName,
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('DateTime:',
-                  style:
-                  TextStyle(fontSize: 16, fontWeight: FontWeight.normal)),
-              Text(orderDetails.dateTime.toIso8601String()),
+              const Text(
+                'DateTime:',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                orderDetails.dateTime.toIso8601String(),
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Total Price:',
-                  style:
-                  TextStyle(fontSize: 16, fontWeight: FontWeight.normal)),
-              Text('${orderDetails.orderTotal}'),
+              const Text(
+                'Total Price:',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                '${orderDetails.orderTotal}',
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Total Quantity:',
-                  style:
-                  TextStyle(fontSize: 16, fontWeight: FontWeight.normal)),
-              Text(orderDetails.orderQuantity.toString()),
+              const Text(
+                'Total Quantity:',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                orderDetails.orderQuantity.toString(),
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Status:',
-                  style:
-                  TextStyle(fontSize: 16, fontWeight: FontWeight.normal)),
-              Text(orderDetails.orderStatus.name),
+              const Text(
+                'Status:',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                orderDetails.orderStatus.name,
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Bank Name:',
-                  style:
-                  TextStyle(fontSize: 16, fontWeight: FontWeight.normal)),
-              Text(orderDetails.orderPayment.bankPaymentDetails.bankName),
+              const Text(
+                'Bank Name:',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                orderDetails.orderPayment.bankPaymentDetails.bankName,
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Stops:',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal)),
-              ...orderDetails.orderStops.map((stop) => Text(stop.stopName)).toList(),
+              const Text(
+                'Stops:',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: orderDetails.orderStops
+                    .map((stop) => Text(
+                          stop.stopName,
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
+                        ))
+                    .toList(),
+              ),
             ],
           ),
           const SizedBox(height: 30),
-
-          Column(
-            // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
               ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   primary: Colors.green,
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 50, vertical: 20),
+                    horizontal: 50,
+                    vertical: 20,
+                  ),
                   textStyle: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -108,14 +190,15 @@ class DisplayOrderDetails extends StatelessWidget {
                 ),
                 child: const Text('Accepted'),
               ),
-              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {},
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.black,
                   primary: Colors.white,
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 50, vertical: 20),
+                    horizontal: 50,
+                    vertical: 20,
+                  ),
                   textStyle: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -128,7 +211,7 @@ class DisplayOrderDetails extends StatelessWidget {
               ),
             ],
           ),
-         const SizedBox(height: 20),
+          const SizedBox(height: 20),
         ],
       ),
     );
