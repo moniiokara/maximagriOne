@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "980573689100",
+    "project_id": "maximagri",
+    "storage_bucket": "maximagri.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:980573689100:android:c7c99a4d16753c13556529",
+        "android_client_info": {
+          "package_name": "com.maximagri.maximagri"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "980573689100-132gko4lj1cvlff93i06bgc39gvamrtm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcBDT0nFHR2KKIdf4DwKC2sivJPYWjrqY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "980573689100-132gko4lj1cvlff93i06bgc39gvamrtm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

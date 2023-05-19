@@ -1,0 +1,83 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:maximagri/models/order_model/single_order_model.dart';
+import 'package:maximagri/pages/auth/splash_screen/progress_indicator_desktop_page.dart';
+import 'package:maximagri/pages/auth/splash_screen/progress_indicator_mobile_page.dart';
+import 'package:maximagri/pages/auth/splash_screen/progress_indicator_tablet_page.dart';
+import 'package:maximagri/utilities/responsiveness.dart';
+import 'package:maximagri/widgets/drawer/dealer_drawer.dart';
+import 'package:maximagri/widgets/navigation/dealer_navigation.dart';
+import 'package:maximagri/widgets/order_display_card.dart';
+import 'package:maximagri/pages/dealer/order_details/dealer_order_details_desktop_page.dart';
+import 'package:maximagri/pages/dealer/order_details/dealer_order_details_mobile_page.dart';
+import 'package:maximagri/pages/dealer/order_details/dealer_order_details_tablet_page.dart';
+
+class DealerOrdersListTabletPage extends StatefulWidget {
+  const DealerOrdersListTabletPage({Key? key}) : super(key: key);
+
+  @override
+  State<DealerOrdersListTabletPage> createState() =>
+      _DealerOrdersListTabletPageState();
+}
+
+class _DealerOrdersListTabletPageState
+    extends State<DealerOrdersListTabletPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('DealerOrdersListTabletPage'),
+      ),
+      drawer: const DealerDrawer(),
+      bottomNavigationBar: const DealerNavigation(selectedIndex: 2),
+      body: SafeArea(
+        child: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('ordersList')
+                .where('dealerUID',
+                    isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.active) {
+                return const Responsiveness(
+                  mobilePage: ProgressIndicatorMobilePage(),
+                  tabletPage: ProgressIndicatorTabletPage(),
+                  desktopPage: ProgressIndicatorDesktopPage(),
+                );
+              }
+              if (!snapshot.hasData) {
+                return const Responsiveness(
+                  mobilePage: ProgressIndicatorMobilePage(),
+                  tabletPage: ProgressIndicatorTabletPage(),
+                  desktopPage: ProgressIndicatorDesktopPage(),
+                );
+              } else {
+                return ListView.builder(
+                    itemCount: snapshot.data?.docs.length,
+                    itemBuilder: (context, index) {
+                      final json = snapshot.data!.docs[index].data();
+                      final orderInfo = SingleOrder.fromJson(json);
+                      return OrderDisplayCard(
+                        orderInfo: orderInfo,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Responsiveness(
+                              mobilePage: DealerOrderDetailsMobilePage(
+                                  orderDetails: orderInfo),
+                              tabletPage: DealerOrderDetailsTabletPage(
+                                  orderDetails: orderInfo),
+                              desktopPage: DealerOrderDetailsDesktopPage(
+                                  orderDetails: orderInfo),
+                            ),
+                          ),
+                        ),
+                      );
+                    });
+              }
+            }),
+      ),
+    );
+  }
+}
