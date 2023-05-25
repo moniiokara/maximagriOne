@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:maximagri/models/order_model/bank_payment_details_model.dart';
 import 'package:maximagri/models/order_model/dispatch_info_model.dart';
@@ -113,8 +114,12 @@ class OrderServices {
         ),
   ];
 
-  static placeOrder(BuildContext context) async {
-    for (var i = 0; i < formRows.length; i++) {
+   static Future<void> placeOrder(BuildContext context) async {
+
+     CollectionReference ordersCollection = FirebaseFirestore.instance.collection('placeOrders');
+
+
+     for (var i = 0; i < formRows.length; i++) {
       if (formRows[i].selectedProduct != null) {
         orderStop.add(OrderStops(
           stopName: formRows[i].shopController.text,
@@ -136,13 +141,12 @@ class OrderServices {
       }
     }
 
-    SingleOrder order = SingleOrder(
+    final order = SingleOrder(
       dealerUID: '',
       dealerName: '',
       orderSerial: '',
       orderTotal: totalOrderPrice,
       orderQuantity: totalMoqUsed,
-
         operationsUID: '',
         zonalManagerUID: '',
         salesManagerUID: '',
@@ -167,13 +171,11 @@ class OrderServices {
         dispatchTime: DateTime.now(),
       ),
     );
-    // Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //         builder: (_) => PaymentScreen(
-    //           order: order,
-    //           bankNameController: bankNameController,
-    //           bankAmountController: bankAmountController,
-    //         )));
-  }
+     await ordersCollection.add(order.toJson()).then((value) {
+       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Sent Data")));
+     });
+
+
+
+   }
 }

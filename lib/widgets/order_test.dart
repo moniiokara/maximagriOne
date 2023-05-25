@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:maximagri/models/products_model/product_profile_model.dart';
 import 'package:maximagri/widgets/order_services.dart';
@@ -11,6 +12,8 @@ class OrderTest extends StatefulWidget {
 
 class _OrderTestState extends State<OrderTest> {
   final _formKey = GlobalKey<FormState>();
+
+  final firestoreInstance = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +46,7 @@ class _OrderTestState extends State<OrderTest> {
                       children: [
                         TextFormField(
                           controller:
-                          OrderServices.formRows[index].stopController,
+                              OrderServices.formRows[index].stopController,
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(),
                             labelText: ' Enter Stop ${index + 1}',
@@ -66,7 +69,7 @@ class _OrderTestState extends State<OrderTest> {
                             return null;
                           },
                           controller:
-                          OrderServices.formRows[index].shopController,
+                              OrderServices.formRows[index].shopController,
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(),
                             labelText: 'Enter Shop ${index + 1}',
@@ -94,7 +97,7 @@ class _OrderTestState extends State<OrderTest> {
                           },
                           items: OrderServices.products
                               .map((e) => DropdownMenuItem(
-                              value: e, child: Text(e.productName)))
+                                  value: e, child: Text(e.productName)))
                               .toList(),
                         ),
                         const SizedBox(
@@ -105,7 +108,7 @@ class _OrderTestState extends State<OrderTest> {
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(),
                             labelText:
-                            'Price: ${OrderServices.formRows[index].selectedProduct?.productPrice ?? ""}',
+                                'Price: ${OrderServices.formRows[index].selectedProduct?.productPrice ?? ""}',
                           ),
                         ),
                         const SizedBox(
@@ -113,7 +116,7 @@ class _OrderTestState extends State<OrderTest> {
                         ),
                         TextFormField(
                           controller:
-                          OrderServices.formRows[index].moqController,
+                              OrderServices.formRows[index].moqController,
                           validator: (value) {
                             int? moq = int.tryParse(value ?? "");
                             if (moq == null || moq < 5 || moq > 50) {
@@ -135,8 +138,8 @@ class _OrderTestState extends State<OrderTest> {
                                   OrderServices
                                       .formRows[index].selectedProduct!,
                                   OrderServices.formRows[index].selectedProduct!
-                                      .productPrice
-                                      .toDouble() *
+                                          .productPrice
+                                          .toDouble() *
                                       moq,
                                 );
                               });
@@ -145,7 +148,7 @@ class _OrderTestState extends State<OrderTest> {
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(),
                             labelText:
-                            'Enter MOQ: ${OrderServices.formRows[index].stopIndex}',
+                                'Enter MOQ: ${OrderServices.formRows[index].stopIndex}',
                           ),
                         ),
                         const SizedBox(
@@ -156,7 +159,7 @@ class _OrderTestState extends State<OrderTest> {
                           decoration: InputDecoration(
                             border: const OutlineInputBorder(),
                             labelText:
-                            'Total Price: ${OrderServices.formRows[index].productQuantity}',
+                                'Total Price: ${OrderServices.formRows[index].productQuantity}',
                           ),
                         ),
                         const SizedBox(
@@ -183,7 +186,7 @@ class _OrderTestState extends State<OrderTest> {
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
                   hintText:
-                  'Total Order Price: ${OrderServices.totalOrderPrice}',
+                      'Total Order Price: ${OrderServices.totalOrderPrice}',
                 ),
               ),
               const SizedBox(
@@ -206,13 +209,13 @@ class _OrderTestState extends State<OrderTest> {
                         ),
                         child: const Center(
                             child: Text(
-                              "Add More Stop",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
-                                  letterSpacing: 1),
-                            )),
+                          "Add More Stop",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.normal,
+                              letterSpacing: 1),
+                        )),
                       ),
                     ),
                   ),
