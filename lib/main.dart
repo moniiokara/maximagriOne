@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:maximagri/Notification%20Services/home_screen.dart';
 import 'package:maximagri/config/app_theme.dart';
+import 'package:maximagri/show_zonal.dart';
 import 'package:maximagri/utilities/user_authentication.dart';
 import 'package:maximagri/config/app_dark_theme.dart';
 import 'package:maximagri/config/routes.dart';
@@ -35,11 +36,12 @@ class MaximAgri extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: appTheme(),
       darkTheme: appDarkTheme(),
-     // routes: customRoutes,
-      //home: const UserAuthentication(),
-   //   home: HomeScreenNotification(),
+     routes: customRoutes,
+      home: const UserAuthentication(),
+      //home: HomeScreenNotification(),
 
-      home: OrderTest(),
+    //  home: OrderTest(),
+     //   home: MyApp(),
     );
   }
 }
