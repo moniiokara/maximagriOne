@@ -25,7 +25,7 @@ class _DealerOrderDetailsDesktopPageState
       ),
       body: Row(children: [
         const DealerDrawer(),
-        DisplayOrderDetails(orderDetails: widget.orderDetails),
+        Expanded(child: DisplayOrderDetails(orderDetails: widget.orderDetails)),
         PerformStatusUpdate(orderDetails: widget.orderDetails),
       ]),
     );

@@ -60,7 +60,7 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
                 ),
                 height: 40,
                 width: double.infinity,
-                child: Center(
+                child: const Center(
                   child: Text("Login"),
                 ),
               ),

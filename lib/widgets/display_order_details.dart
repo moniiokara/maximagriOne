@@ -20,12 +20,10 @@ class DisplayOrderDetails extends StatefulWidget {
 
 class _DisplayOrderDetailsState extends State<DisplayOrderDetails> {
 
-  OrderServices orderServices = OrderServices();
+ // OrderServices orderServices = OrderServices();
 
   @override
   Widget build(BuildContext context) {
-
-
 
     return SingleChildScrollView(
       child: Padding(
@@ -138,58 +136,58 @@ class _DisplayOrderDetailsState extends State<DisplayOrderDetails> {
             // const SizedBox(
             //   height: 10,
             // ),
-            StreamBuilder(
-             stream: FirebaseFirestore.instance.collection("userProfile")
-                .where('userUID', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-                .snapshots(),
-                builder: (context, snapshot) {
-                  final filteredDocs = snapshot.data!.docs
-                      .where((doc) => doc.get('userType') == 'dealer')
-                      .toList();
-                  if(snapshot.connectionState == ConnectionState.active){
-                    return SingleChildScrollView(
-
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: filteredDocs.length,
-                          itemBuilder: (context, index) {
-                            final json = filteredDocs[index].data();
-                            final userProfile = UserProfile.fromJson(json);
-                            final String address =
-                                '${userProfile.userAddress.province}, ${userProfile.userAddress.district}, '
-                                '${userProfile.userAddress.tehsil}';
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(address),
-                                    Text(
-                                      widget.orderDetails.dispatchInfo.vehicleNo,
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(userProfile.userMobile),
-                                    Text(
-                                      widget.orderDetails.dispatchInfo.dispatchTime.toString(),
-                                    ),
-                                  ],
-                                ),
-                              // Text(userProfile.userMobile)
-                              ],
-                            );
-                          }),
-                    );
-                  } else {
-                    return const CircularProgressIndicator();
-                  }
-                }
-            ),
+            // StreamBuilder(
+            //  stream: FirebaseFirestore.instance.collection("userProfile")
+            //     .where('userUID', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+            //     .snapshots(),
+            //     builder: (context, snapshot) {
+            //       final filteredDocs = snapshot.data!.docs
+            //           .where((doc) => doc.get('userType') == 'dealer')
+            //           .toList();
+            //       if(snapshot.connectionState == ConnectionState.active){
+            //         return SingleChildScrollView(
+            //
+            //           child: ListView.builder(
+            //               shrinkWrap: true,
+            //               itemCount: filteredDocs.length,
+            //               itemBuilder: (context, index) {
+            //                 final json = filteredDocs[index].data();
+            //                 final userProfile = UserProfile.fromJson(json);
+            //                 final String address =
+            //                     '${userProfile.userAddress.province}, ${userProfile.userAddress.district}, '
+            //                     '${userProfile.userAddress.tehsil}';
+            //                 return Column(
+            //                   mainAxisAlignment: MainAxisAlignment.start,
+            //                   crossAxisAlignment: CrossAxisAlignment.start,
+            //                   children: [
+            //                     Row(
+            //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //                       children: [
+            //                         Text(address),
+            //                         Text(
+            //                           widget.orderDetails.dispatchInfo.vehicleNo,
+            //                         ),
+            //                       ],
+            //                     ),
+            //                     Row(
+            //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //                       children: [
+            //                         Text(userProfile.userMobile),
+            //                         Text(
+            //                           widget.orderDetails.dispatchInfo.dispatchTime.toString(),
+            //                         ),
+            //                       ],
+            //                     ),
+            //                   // Text(userProfile.userMobile)
+            //                   ],
+            //                 );
+            //               }),
+            //         );
+            //       } else {
+            //         return const CircularProgressIndicator();
+            //       }
+            //     }
+            // ),
 
             const SizedBox(
               height: 20,
