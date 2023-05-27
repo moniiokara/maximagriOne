@@ -47,6 +47,64 @@ class _OperationsCreateAccountMobilePageState
     townController.clear();
   }
 
+  // User hierarchy
+
+  String? selectedZonalManager;
+  String? selectedSalesManager;
+  String? selectedSalesOfficer;
+  List<String> zonalManagers = [];
+  List<String> salesManagers = [];
+  List<String> salesOfficers = [];
+
+
+  Future<void> fetchZonalManagers() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('userProfile')
+        .where('userType', isEqualTo: 'zonalManager')
+        .get();
+    setState(() {
+      zonalManagers =
+          snapshot.docs.map((doc) => doc['userName'] as String).toList();
+    });
+  }
+
+  Future<void> fetchSalesManagers(String zonalManagerUID) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('userProfile')
+        .where('userType', isEqualTo: 'salesManager')
+        .where('zonalManagerUID', isEqualTo: zonalManagerUID)
+        .get();
+    setState(() {
+      salesManagers =
+          snapshot.docs.map((doc) => doc['userName'] as String).toList();
+      selectedSalesManager = null;
+      selectedSalesOfficer = null;
+    });
+  }
+
+  Future<void> fetchSalesOfficers(String salesManagerUID) async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('userProfile')
+        .where('userType', isEqualTo: 'salesOfficer')
+        .where('salesManagerUID', isEqualTo: salesManagerUID)
+        .get();
+    setState(() {
+      salesOfficers =
+          snapshot.docs.map((doc) => doc['userName'] as String).toList();
+    });
+  }
+
+  @override
+  void initState() {
+
+    super.initState();
+    fetchZonalManagers();
+  }
+
+
+  // User hierarchy end
+
+
   final _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final _fromKey = GlobalKey<FormState>();
@@ -144,6 +202,9 @@ class _OperationsCreateAccountMobilePageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('OperationsCreateAccountMobilePage'),
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -178,45 +239,6 @@ class _OperationsCreateAccountMobilePageState
                       ),
                     ),
 
-                    // Enter the email
-                    // SizedBox(
-                    //   width: double.infinity,
-                    //   child: TextFormField(
-                    //     maxLines: 1,
-                    //     validator: (value) {
-                    //       if (value == null || value.isEmpty) {
-                    //         return 'Email is required';
-                    //       }
-                    //       return null;
-                    //     },
-                    //     controller: emailController,
-                    //     decoration: const InputDecoration(
-                    //       labelText: 'Enter Email',
-                    //       border: OutlineInputBorder(),
-                    //     ),
-                    //   ),
-                    // ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    // Enter the password
-                    // SizedBox(
-                    //   width: double.infinity,
-                    //   child: TextFormField(
-                    //     maxLines: 1,
-                    //     validator: (value) {
-                    //       if (value == null || value.isEmpty) {
-                    //         return 'Password is required';
-                    //       }
-                    //       return null;
-                    //     },
-                    //     controller: passwordController,
-                    //     decoration: const InputDecoration(
-                    //       labelText: 'Enter Password',
-                    //       border: OutlineInputBorder(),
-                    //     ),
-                    //   ),
-                    // ),
                     const SizedBox(
                       height: 16,
                     ),
@@ -261,6 +283,108 @@ class _OperationsCreateAccountMobilePageState
                         ),
                       ),
                     ),
+                    const SizedBox(height: 16,),
+                    DropdownButtonFormField<String>(
+                      decoration: const InputDecoration(
+                        labelText: 'Zonal Manager',
+                        border: OutlineInputBorder(),
+                      ),
+                      value: selectedZonalManager,
+                      items: zonalManagers.map((manager) {
+                        return DropdownMenuItem<String>(
+                          value: manager,
+                          child: Text(manager),
+                        );
+                      }).toList(),
+                      onChanged: (value) async {
+                        setState(() {
+                          selectedZonalManager = value;
+                          selectedSalesManager = null;
+                          selectedSalesOfficer = null;
+                        });
+
+                        var snapshot = await FirebaseFirestore.instance
+                            .collection('userProfile')
+                            .where('userName', isEqualTo: value)
+                            .get();
+
+                        var selectedZonalManagerDoc = snapshot.docs.firstWhere(
+                              (doc) => doc['userName'] == value,
+                          orElse: () => null!,
+                        );
+
+                        if (selectedZonalManagerDoc != null) {
+                          var zonalManagerUID = selectedZonalManagerDoc['userUID'];
+                          await fetchSalesManagers(zonalManagerUID);
+                        }
+                      },
+                      validator: (value) =>
+                      value == null ? 'Select the zonal manager' : null,
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    if (selectedZonalManager != null)
+                      DropdownButtonFormField<String>(
+                        value: selectedSalesManager,
+                        items: salesManagers.map((manager) {
+                          return DropdownMenuItem<String>(
+                            value: manager,
+                            child: Text(manager),
+                          );
+                        }).toList(),
+                        onChanged: (value) async {
+                          setState(() {
+                            selectedSalesManager = value;
+                            selectedSalesOfficer = null;
+                          });
+
+                          var snapshot = await FirebaseFirestore.instance
+                              .collection('userProfile')
+                              .where('userName', isEqualTo: value)
+                              .get();
+
+                          var selectedSalesManagerDoc = snapshot.docs.firstWhere(
+                                (doc) => doc['userName'] == value,
+                            orElse: () => null!,
+                          );
+
+                          if (selectedSalesManagerDoc != null) {
+                            var salesManagerUID = selectedSalesManagerDoc['userUID'];
+                            await fetchSalesOfficers(salesManagerUID);
+                          }
+                        },
+                        validator: (value) =>
+                        value == null ? 'Select the sales manager' : null,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Sales Manager',
+                        ),
+                      ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    if (selectedSalesManager != null)
+                      DropdownButtonFormField<String>(
+                        value: selectedSalesOfficer,
+                        items: salesOfficers.map((officer) {
+                          return DropdownMenuItem<String>(
+                            value: officer,
+                            child: Text(officer),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedSalesOfficer = value;
+                          });
+                        },
+                        validator: (value) =>
+                        value == null ? 'Select the sales officer' : null,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Sales Officer',
+                        ),
+                      ),
                     const SizedBox(
                       height: 16,
                     ),
