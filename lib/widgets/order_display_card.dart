@@ -16,26 +16,20 @@ class OrderDisplayCard extends StatefulWidget {
 
 class _OrderDisplayCardState extends State<OrderDisplayCard>
     with SingleTickerProviderStateMixin {
-
   late final AnimationController _controller;
   late final Animation<double> _animation;
 
   @override
   void initState() {
-
     super.initState();
     _controller = AnimationController(
-        duration: const Duration(milliseconds: 200),
-        vsync: this);
+        duration: const Duration(milliseconds: 200), vsync: this);
 
-    _animation = Tween<double>(begin: 1.0, end: 1.05).animate(
-      CurvedAnimation(
-          parent: _controller,
-          curve: Curves.easeOut,
-          reverseCurve: Curves.easeIn)
-    );
+    _animation = Tween<double>(begin: 1.0, end: 1.05).animate(CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOut,
+        reverseCurve: Curves.easeIn));
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +42,7 @@ class _OrderDisplayCardState extends State<OrderDisplayCard>
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Card(
+            color: Colors.white,
             shadowColor: Colors.green,
             elevation: 8,
             shape: RoundedRectangleBorder(
@@ -64,40 +59,35 @@ class _OrderDisplayCardState extends State<OrderDisplayCard>
                       Text(
                         widget.orderInfo.dealerName,
                         style: TextStyle(
-                          fontSize: 20, // Increased font size
+                          fontSize: 24,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black.withOpacity(0.7), // Changed color
-                          fontFamily: 'Georgia', // Added custom font family
+                          color: Colors.black.withOpacity(0.7),
+                          fontFamily: 'Georgia',
                         ),
                       ),
-                      Row(
-                        children: [
-                          const SizedBox(width: 8),
-                          Container(
-                            height: 30,
-                            width: 110,
-                            decoration: BoxDecoration(
-                              color: Colors.green,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Center(
-                              child: Text(
-                                widget.orderInfo.orderStatus.name,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 16, // Increased font size
-                                  fontFamily: 'Georgia', // Added custom font family
-                                ),
-                              ),
+                      Container(
+                        height: 40,
+                        width: 120,
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: Center(
+                          child: Text(
+                            widget.orderInfo.orderStatus.name,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontFamily: 'Georgia',
                             ),
                           ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 12),
                   Row(
                     children: [
                       const Icon(
@@ -106,10 +96,17 @@ class _OrderDisplayCardState extends State<OrderDisplayCard>
                         color: Colors.green,
                       ),
                       const SizedBox(width: 8),
-                      Text('Order No: ${widget.orderInfo.orderSerial}'),
+                      Text(
+                        'Order No: ${widget.orderInfo.orderSerial}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black.withOpacity(0.7),
+                          fontFamily: 'Georgia',
+                        ),
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
                   Row(
                     children: [
                       const Icon(
@@ -118,11 +115,17 @@ class _OrderDisplayCardState extends State<OrderDisplayCard>
                         color: Colors.green,
                       ),
                       const SizedBox(width: 8),
-                      Text('Date & Time: ${widget.orderInfo.dateTime}'),
+                      Text(
+                        'Date & Time: ${widget.orderInfo.dateTime}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black.withOpacity(0.7),
+                          fontFamily: 'Georgia',
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 10),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -132,19 +135,26 @@ class _OrderDisplayCardState extends State<OrderDisplayCard>
                         color: Colors.green,
                       ),
                       const SizedBox(width: 8),
-                      const Text('Total Quantity: '),
-                      const SizedBox(
-                        width: 5,
+                      Text(
+                        'Total Quantity:',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black.withOpacity(0.7),
+                          fontFamily: 'Georgia',
+                        ),
                       ),
+                      const SizedBox(width: 5),
                       Text(
                         widget.orderInfo.orderQuantity.toString(),
                         style: const TextStyle(
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
+                          fontFamily: 'Georgia',
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -154,14 +164,21 @@ class _OrderDisplayCardState extends State<OrderDisplayCard>
                         color: Colors.green,
                       ),
                       const SizedBox(width: 8),
-                      const Text('Total Price: '),
-                      const SizedBox(
-                        width: 8,
+                      Text(
+                        'Total Price:',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black.withOpacity(0.7),
+                          fontFamily: 'Georgia',
+                        ),
                       ),
+                      const SizedBox(width: 8),
                       Text(
                         widget.orderInfo.orderTotal.toString(),
                         style: const TextStyle(
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
+                          fontFamily: 'Georgia',
                         ),
                       ),
                     ],
@@ -174,6 +191,7 @@ class _OrderDisplayCardState extends State<OrderDisplayCard>
       ),
     );
   }
+
   @override
   void dispose() {
     _controller.dispose();

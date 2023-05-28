@@ -348,8 +348,68 @@ class _DisplayOrderDetailsState extends State<DisplayOrderDetails> {
                   thickness: 1,
                   color: Colors.black,
                 ),
+                    const SizedBox(height: 20,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          height: 40,
+                          width: 150,
+                          decoration:  BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: const Center(child: Text("Rejected",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontFamily: 'Georgia',
+                            ),)),
+                        ),
+                        Container(
+                          height: 40,
+                          width: 150,
+                          decoration:  BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: const Center(child: Text("Accepted",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontFamily: 'Georgia',
+                            ),)),
+                        ),
+                      ],
+                    ),
+
+                // const SizedBox(height: 20),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //   children: [
+                //     Container(
+                //       height: 50,
+                //       width: double.infinity,
+                //       decoration:  BoxDecoration(
+                //         borderRadius: BorderRadius.circular(14),
+                //       ),
+                //       child: const Center(child: Text("Rejected")),
+                //     ),
+                //     Container(
+                //       height: 50,
+                //       width: double.infinity,
+                //       decoration:  BoxDecoration(
+                //         borderRadius: BorderRadius.circular(14),
+                //       ),
+                //       child: const Center(child: Text("Accepted")),
+                //     ),
+                //   ],
+                // ),
               ],
             ),
+
           ],
         ),
       ),

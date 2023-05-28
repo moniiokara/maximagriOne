@@ -267,15 +267,15 @@ class _OperationsCreateAccountMobilePageState
                     SizedBox(
                       width: double.infinity,
                       child: TextFormField(
-                        // validator: (value) {
-                        //   final cnicExp = RegExp(r'^\d{5}-\d{7}-\d{1}$');
-                        //   if (value == null || value.isEmpty) {
-                        //     return 'CNIC number is required';
-                        //   } else if (!cnicExp.hasMatch(value)) {
-                        //     return 'Please enter a valid CNIC number';
-                        //   }
-                        //   return null;
-                        // },
+                        validator: (value) {
+                          final cnicExp = RegExp(r'^\d{5}-\d{7}-\d{1}$');
+                          if (value == null || value.isEmpty) {
+                            return 'CNIC number is required';
+                          } else if (!cnicExp.hasMatch(value)) {
+                            return 'Please enter a valid CNIC number';
+                          }
+                          return null;
+                        },
                         controller: cnicController,
                         decoration: const InputDecoration(
                           labelText: 'Enter Cnic Num',

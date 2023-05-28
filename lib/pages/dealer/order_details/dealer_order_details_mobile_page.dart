@@ -11,7 +11,6 @@ class DealerOrderDetailsMobilePage extends StatefulWidget {
   const DealerOrderDetailsMobilePage({
     Key? key,
     required this.orderDetails,
-
   }) : super(key: key);
 
   @override
@@ -21,9 +20,6 @@ class DealerOrderDetailsMobilePage extends StatefulWidget {
 
 class _DealerOrderDetailsMobilePageState
     extends State<DealerOrderDetailsMobilePage> {
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +29,6 @@ class _DealerOrderDetailsMobilePageState
       drawer: const DealerDrawer(),
       body: SafeArea(
         child: SingleChildScrollView(
-
           child: Column(
             children: [
               DisplayOrderDetails(orderDetails: widget.orderDetails),
