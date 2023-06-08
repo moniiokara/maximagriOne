@@ -510,3 +510,100 @@ class _OrderTestState extends State<OrderTest> {
     );
   }
 }
+
+
+// import 'package:flutter/material.dart';
+//
+// class PlaceOrder extends StatefulWidget {
+//   const PlaceOrder({Key? key}) : super(key: key);
+//
+//   @override
+//   State<PlaceOrder> createState() => _PlaceOrderState();
+// }
+//
+// class _PlaceOrderState extends State<PlaceOrder> {
+//   Map<int, List<int>> stops = {1: []};
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text("Place Order"),
+//         centerTitle: true,
+//       ),
+//       body: SafeArea(
+//         child: ListView.builder(
+//           itemCount: stops.length,
+//           itemBuilder: (context, outerIndex) {
+//             int stop = stops.keys.elementAt(outerIndex);
+//             return Column(
+//               children: [
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                   children: [
+//                     Text("Stop $stop"),
+//                     if (stops.length < 4)
+//                       IconButton(
+//                         icon: const Icon(Icons.add),
+//                         onPressed: () {
+//                           setState(() {
+//                             stops[stop + 1] = [];
+//                           });
+//                         },
+//                       ),
+//                     if (stops.length > 1)
+//                       IconButton(
+//                         icon: const Icon(Icons.remove),
+//                         onPressed: () {
+//                           setState(() {
+//                             stops.remove(stop);
+//                           });
+//                         },
+//                       ),
+//                   ],
+//                 ),
+//                 ListView.builder(
+//                   shrinkWrap: true,
+//                   itemCount: stops[stop]!.length + 1,
+//                   itemBuilder: (context, index) {
+//                     if (index == stops[stop]!.length) {
+//                       return Row(
+//                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                         children: [
+//                           const Text("Add Product"),
+//                           IconButton(
+//                             icon: const Icon(Icons.add),
+//                             onPressed: () {
+//                               setState(() {
+//                                 stops[stop]!.add(1);
+//                               });
+//                             },
+//                           ),
+//                         ],
+//                       );
+//                     } else {
+//                       return Row(
+//                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                         children: [
+//                           Text('Product ${index + 1}'),
+//                           IconButton(
+//                             icon: const Icon(Icons.remove),
+//                             onPressed: () {
+//                               setState(() {
+//                                 stops[stop]!.removeAt(index);
+//                               });
+//                             },
+//                           ),
+//                         ],
+//                       );
+//                     }
+//                   },
+//                 ),
+//               ],
+//             );
+//           },
+//         ),
+//       ),
+//     );
+//   }
+// }
