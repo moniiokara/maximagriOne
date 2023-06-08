@@ -27,7 +27,7 @@ class OrderStops {
        itemList: [
          OrderProductItem(
              productName: stopController.products[0].productName.text,
-             productQuantity: int.parse(stopController.products[0].calculateProductQuantity().text),
+             productQuantity: int.parse(stopController.products[0].productQuantity.text),
              productPrice: double.parse(stopController.products[0].productPrice.text),
              productTotal: double.parse(stopController.products[0].productTotal().text)),
        ]);

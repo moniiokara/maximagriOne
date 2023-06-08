@@ -19,7 +19,7 @@ class OrderProductItem {
           {required ProductController productController}) =>
       OrderProductItem(
           productName: productController.productName.text,
-          productQuantity: int.parse(productController.calculateProductQuantity().text),
+          productQuantity: int.parse(productController.productQuantity.text),
           productPrice: double.parse(productController.productPrice.text),
           productTotal: double.parse(productController.productTotal().text));
 
