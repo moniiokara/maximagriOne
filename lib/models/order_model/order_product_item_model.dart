@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:maximagri/place_order.dart';
+import 'package:maximagri/models/controller_classes/controller_class.dart';
 part 'order_product_item_model.g.dart';
 
 @JsonSerializable()
@@ -15,10 +15,12 @@ class OrderProductItem {
     required this.productTotal,
   });
 
+
+
   factory OrderProductItem.fromControllers(
           {required ProductController productController}) =>
       OrderProductItem(
-          productName: productController.productName.text,
+          productName: productController.productName.text.trim(),
           productQuantity: int.parse(productController.productQuantity.text),
           productPrice: double.parse(productController.productPrice.text),
           productTotal: double.parse(productController.productTotal().text));

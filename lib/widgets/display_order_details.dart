@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:maximagri/models/order_model/single_order_model.dart';
 import 'package:maximagri/models/user_profile_model/user_profile_model.dart';
-import 'package:maximagri/widgets/order_services.dart';
 
 class DisplayOrderDetails extends StatefulWidget {
   final SingleOrder orderDetails;

@@ -2,13 +2,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:maximagri/Notification%20Services/home_screen.dart';
 import 'package:maximagri/config/app_theme.dart';
-import 'package:maximagri/place_order.dart';
 import 'package:maximagri/select_zonal_manger.dart';
 import 'package:maximagri/show_zonal.dart';
 import 'package:maximagri/utilities/user_authentication.dart';
 import 'package:maximagri/config/app_dark_theme.dart';
 import 'package:maximagri/config/routes.dart';
-import 'package:maximagri/widgets/order_test.dart';
 import 'firebase_options.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -38,12 +36,9 @@ class MaximAgri extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: appTheme(),
       darkTheme: appDarkTheme(),
-   //   routes: customRoutes,
-    //  home: const UserAuthentication(),
-
+       routes: customRoutes,
+        home: const UserAuthentication(),
       //home: HomeScreenNotification(),
-         home: PlaceOrder(),
-      // home: OrderTest(),
       //  home: MyDropdownWidget(),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:maximagri/models/controller_classes/controller_class.dart';
 import 'package:maximagri/models/order_model/bank_payment_details_model.dart';
 import 'package:maximagri/models/order_model/dispatch_info_model.dart';
 import 'package:maximagri/models/order_model/order_payment_model.dart';
@@ -6,7 +7,6 @@ import 'package:maximagri/models/order_model/order_product_item_model.dart';
 import 'package:maximagri/models/order_model/order_status_enum.dart';
 import 'package:maximagri/models/order_model/order_stops_model.dart';
 import 'package:maximagri/models/user_profile_model/user_profile_model.dart';
-import 'package:maximagri/place_order.dart';
 part 'single_order_model.g.dart';
 
 @JsonSerializable()
@@ -47,41 +47,42 @@ class SingleOrder {
 
   factory SingleOrder.fromControllers(
           {required SingleOrderController singleOrderController,
-          required StopController stopController,
-          required UserProfile userProfile}) =>
+          required UserProfile userProfile,
+        }) =>
       SingleOrder(
         dealerUID: userProfile.userUID,
         dealerName: userProfile.userName,
         orderSerial: DateTime.now().toString(),
         orderTotal:
-            double.parse(singleOrderController.calculateOrderTotal().text),
+            double.parse(singleOrderController.calculateOrderTotals().text),
         orderQuantity:
-            int.parse(singleOrderController.calculateOrderQuantity().text),
+            int.parse(singleOrderController.calculateOrderQuantitys().text),
         dateTime: DateTime.now(),
         orderStatus: OrderStatus.pending,
-        orderStops: [
-          OrderStops(
-              stopName: stopController.stopNameController.text,
-              stopContact: stopController.stopContactController.text,
-              stopQuantity: int.parse(stopController.calculateStopQuantity().text),
-              stopTotal: double.parse(stopController.calculateStopTotal().text),
-              itemList: [
-                OrderProductItem(
-                    productName: stopController.products[0].productName.text,
-                    productQuantity: int.parse(
-                        stopController.products[0].productQuantity.text),
-                    productPrice: double.parse(
-                        stopController.products[0].productPrice.text),
-                    productTotal: double.parse(
-                        stopController.products[0].productTotal().text)),
-              ]),
-        ],
+        orderStops: List.generate(
+          singleOrderController.stops.length,
+              (index) => OrderStops(
+            stopName: singleOrderController.stops[index].stopNameController.text,
+            stopContact: singleOrderController.stops[index].stopContactController.text,
+            stopQuantity: int.parse(singleOrderController.stops[index].calculateStopQuantity().text),
+            stopTotal: double.parse(singleOrderController.stops[index].calculateStopTotal().text),
+            itemList: singleOrderController.stops[index].products.map((product) => OrderProductItem(
+              productName: product.productName.text.trim(),
+              productPrice: double.parse(product.productPrice.text),
+              productQuantity: int.parse(product.productQuantity.text),
+              productTotal: double.parse(product.productTotal().text),
+            )).toList(),
+          ),
+        ),
         orderPayment: OrderPayment(
             bankPaymentDetails: BankPaymentDetails(
-                bankName: "bankName", bankAmount: 0.0, bankReceipt: ""),
-            bankPayment: 0.0,
-            creditPayment: 0.0,
-            rentAdjustment: 0.0),
+                bankName: "bankName",
+                bankAmount: double.parse(singleOrderController.creditAmountController.text),
+                bankReceipt: ""
+            ),
+            bankPayment: double.parse(singleOrderController.bankAmountController.text),
+            creditPayment: double.parse(singleOrderController.creditAmountController.text),
+            rentAdjustment: double.parse(singleOrderController.rentAmountController.text)),
         dispatchInfo: DispatchInfo(
           driverContact: "",
           vehicleNo: "",
