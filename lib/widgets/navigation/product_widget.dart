@@ -104,16 +104,13 @@ class _ProductWidgetState extends State<ProductWidget> {
 
                       Expanded(
                         child: TextFormField(
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter price';
-                            }
-                          },
+
                           onChanged: (value) {
                             setState(() {});
                           },
                           controller: widget.singleOrderController
                               .stops[widget.a].products[index].productPrice,
+                          enabled: false,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
                           ],
@@ -132,11 +129,14 @@ class _ProductWidgetState extends State<ProductWidget> {
                             setState(() {});
                             widget.onUpdate();
                           },
-                          controller: widget.singleOrderController
-                              .stops[widget.a].products[index].productQuantity,
+                          controller: widget.singleOrderController.stops[widget.a].products[index].productQuantity,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return "Please enter quantity";
+                            }
+                            if (int.parse(value) < 17) {
+                            return ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Minimum product quantity is 70'))).toString();
                             }
                             return null;
                           },
@@ -151,6 +151,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                             ),
                           ),
                         ),
+
                       ),
                       Expanded(
                         child: TextFormField(
@@ -240,6 +241,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                               textAlign: TextAlign.center,
                               controller: widget.singleOrderController
                                   .calculateOrderTotals(),
+                              enabled: false,
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
@@ -273,6 +275,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                               textAlign: TextAlign.center,
                               controller: widget.singleOrderController
                                   .calculateOrderQuantitys(),
+                              enabled: false,
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly,
                               ],

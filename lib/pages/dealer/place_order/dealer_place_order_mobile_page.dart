@@ -12,6 +12,12 @@ import 'package:maximagri/widgets/navigation/dealer_navigation.dart';
 import 'package:maximagri/widgets/navigation/product_widget.dart';
 import 'package:maximagri/widgets/product_header_widget.dart';
 
+class Bank {
+  String bankName;
+  String iban;
+  Bank({required this.bankName, required this.iban});
+}
+
 class DealerPlaceOrderMobilePage extends StatefulWidget {
   const DealerPlaceOrderMobilePage({Key? key}) : super(key: key);
 
@@ -22,8 +28,10 @@ class DealerPlaceOrderMobilePage extends StatefulWidget {
 
 class _DealerPlaceOrderMobilePageState
     extends State<DealerPlaceOrderMobilePage> {
-
   SingleOrderController singleOrderController = SingleOrderController(
+    ibanNoController: TextEditingController(),
+    bankReciptController: TextEditingController(),
+    bankNameController: TextEditingController(),
     bankAmountController: TextEditingController(),
     creditAmountController: TextEditingController(),
     rentAmountController: TextEditingController(),
@@ -41,15 +49,46 @@ class _DealerPlaceOrderMobilePageState
     ],
   );
 
+  @override
+  void dispose() {
+    singleOrderController.bankReciptController.dispose();
+    singleOrderController.bankNameController.dispose();
+    singleOrderController.rentAmountController.dispose();
+    singleOrderController.stops.forEach((element) {
+      element.stopContactController.dispose();
+      element.stopNameController.dispose();
+      element.products.forEach((element) {
+        element.productQuantity.dispose();
+        element.productPrice.dispose();
+        element.productName.dispose();
+        element.productTotal().dispose();
+      });
+    });
+    super.dispose();
+    singleOrderController.bankReciptController.clear();
+    singleOrderController.bankNameController.clear();
+    singleOrderController.rentAmountController.clear();
+    singleOrderController.stops.forEach((element) {
+      element.stopContactController.clear();
+      element.stopNameController.clear();
+      element.products.forEach((element) {
+        element.productQuantity.clear();
+        element.productPrice.clear();
+        element.productName.clear();
+        element.productTotal().clear();
+      });
+    });
+  }
 
   String bankReceipt = '';
 
   void paymentAdjust() {
-    double totalPayments = double.parse(singleOrderController.bankAmountController.text) +
-        double.parse(singleOrderController.creditAmountController.text) +
-        double.parse(singleOrderController.rentAmountController.text);
+    double totalPayments =
+        double.parse(singleOrderController.bankAmountController.text) +
+            double.parse(singleOrderController.creditAmountController.text) +
+            double.parse(singleOrderController.rentAmountController.text);
     double orderTotal =
-    double.parse(singleOrderController.calculateOrderTotals().text);
+        double.parse(singleOrderController.calculateOrderTotals().text);
     if (totalPayments > orderTotal) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text("Total payments cannot exceed the order total")));
@@ -68,13 +107,16 @@ class _DealerPlaceOrderMobilePageState
           .putData(selectedFileBytes!);
 
       bankReceipt = dateTimeNow + name;
+      singleOrderController.bankReciptController.text = bankReceipt;
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Image upload successful')));
     }
   }
 
   final _formKey = GlobalKey<FormState>();
 
   int address = 1;
-  int product = 1;
+  // int product = 1;
 
   orderTotalUpdate() {
     setState(() {});
@@ -88,7 +130,9 @@ class _DealerPlaceOrderMobilePageState
       if (user != null) {
         String userUid = user.uid;
         final userProfile = await FirebaseFirestore.instance
-            .collection("userProfile").where('userUID', isEqualTo: userUid).get();
+            .collection("userProfile")
+            .where('userUID', isEqualTo: userUid)
+            .get();
         if (userProfile.docs.isNotEmpty) {
           final profile = UserProfile.fromJson(userProfile.docs.first.data());
 
@@ -126,8 +170,23 @@ class _DealerPlaceOrderMobilePageState
     }
   }
 
+  // Bank Account Name List
+  Bank? selectedBank;
 
+  final ibanController = TextEditingController();
 
+  List<Bank> bank = [
+    Bank(bankName: 'Habib Bank Limited', iban: 'PK24 HABB 0012 4279 4794 5203'),
+    Bank(
+        bankName: 'United Bank Limited', iban: 'PK33 UNIL 0109 0002 0151 4494'),
+    Bank(bankName: 'MCB Bank Limited', iban: 'PK24 MUCB 0484 8209 4100 0264'),
+    Bank(
+        bankName: 'Bank Alfalah Limited',
+        iban: 'PK05 ALFH 0047 0010 0541 2385'),
+    Bank(
+        bankName: 'Bank Alfalah Limited',
+        iban: 'PK59 ALFH 0364 0010 0512 4545'),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -201,6 +260,9 @@ class _DealerPlaceOrderMobilePageState
                                   },
                                   controller: singleOrderController
                                       .stops[outerIndex].stopContactController,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
                                   decoration: InputDecoration(
                                     hintText: "Enter Contact",
                                     border: OutlineInputBorder(
@@ -244,6 +306,7 @@ class _DealerPlaceOrderMobilePageState
                                       controller: singleOrderController
                                           .stops[outerIndex]
                                           .calculateStopTotal(),
+                                      enabled: false,
                                       inputFormatters: [
                                         FilteringTextInputFormatter.digitsOnly,
                                       ],
@@ -251,7 +314,7 @@ class _DealerPlaceOrderMobilePageState
                                         hintText: "0",
                                         border: OutlineInputBorder(
                                           borderRadius:
-                                          BorderRadius.circular(5),
+                                              BorderRadius.circular(5),
                                         ),
                                       ),
                                     ),
@@ -285,6 +348,7 @@ class _DealerPlaceOrderMobilePageState
                                       controller: singleOrderController
                                           .stops[outerIndex]
                                           .calculateStopQuantity(),
+                                      enabled: false,
                                       inputFormatters: [
                                         FilteringTextInputFormatter.digitsOnly,
                                       ],
@@ -292,21 +356,83 @@ class _DealerPlaceOrderMobilePageState
                                         hintText: "0",
                                         border: OutlineInputBorder(
                                           borderRadius:
-                                          BorderRadius.circular(5),
+                                              BorderRadius.circular(5),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
+                              if (outerIndex ==
+                                  singleOrderController.stops.length - 1)
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: address < 4
+                                          ? () {
+                                              if (singleOrderController
+                                                  .stops.isNotEmpty) {
+                                                setState(() {
+                                                  singleOrderController.stops
+                                                      .add(StopController(
+                                                    stopNameController:
+                                                        TextEditingController(),
+                                                    stopContactController:
+                                                        TextEditingController(),
+                                                    products: [
+                                                      ProductController(
+                                                        productName:
+                                                            TextEditingController(),
+                                                        productPrice:
+                                                            TextEditingController(),
+                                                        productQuantity:
+                                                            TextEditingController(),
+                                                      ),
+                                                    ],
+                                                  ));
+                                                  address++;
+                                                });
+                                              }
+                                            }
+                                          : null,
+                                      child: const Text("Add More Stop"),
+                                    ),
+                                    const SizedBox(
+                                      width: 6,
+                                    ),
+                                    if (address > 1)
+                                      OutlinedButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            singleOrderController.stops
+                                                .removeLast();
+                                            address--;
+                                          });
+                                        },
+                                        child: const Text("Remove Last Stop"),
+                                      ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                  ],
+                                ),
+                              const SizedBox(
+                                height: 20,
+                              ),
                               const Divider(
                                 color: Colors.black,
                                 height: 10,
                               ),
+                              const SizedBox(
+                                height: 20,
+                              ),
                               if (outerIndex ==
                                   singleOrderController.stops.length - 1)
                                 Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const SizedBox(
@@ -320,8 +446,49 @@ class _DealerPlaceOrderMobilePageState
                                     const SizedBox(
                                       height: 10,
                                     ),
+                                    DropdownButtonFormField(
+                                        validator: (value) {
+                                          if (value == null) {
+                                            return "Please select payment method";
+                                          }
+                                        },
+                                        value: selectedBank,
+                                        decoration: const InputDecoration(
+                                            hintText: 'Select Payment Method',
+                                            border: OutlineInputBorder()),
+                                        items: bank.map((Bank bank) {
+                                          return DropdownMenuItem<Bank>(
+                                            value: bank,
+                                            child: Text(bank.bankName),
+                                          );
+                                        }).toList(),
+                                        onChanged: (value) {
+                                          setState(() {
+                                            selectedBank = value;
+                                          });
+                                          singleOrderController.ibanNoController
+                                              .text = selectedBank?.iban ?? '';
+                                          singleOrderController
+                                                  .bankNameController.text =
+                                              selectedBank?.bankName ?? '';
+                                        }),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
                                     TextFormField(
-                                      controller: singleOrderController.bankAmountController,
+                                      controller: singleOrderController
+                                          .ibanNoController,
+                                      enabled: false,
+                                      decoration: const InputDecoration(
+                                          hintText: 'IBAN No',
+                                          border: OutlineInputBorder()),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    TextFormField(
+                                      controller: singleOrderController
+                                          .bankAmountController,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
                                           return 'enter bank amount';
@@ -337,16 +504,27 @@ class _DealerPlaceOrderMobilePageState
                                     const SizedBox(
                                       height: 20,
                                     ),
+                                    TextFormField(
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Select image';
+                                        }
+                                      },
+                                      controller: singleOrderController
+                                          .bankReciptController,
+                                      readOnly: true,
+                                    ),
                                     OutlinedButton(
                                         onPressed: () {
                                           _pickImage();
                                         },
-                                        child: Text("Add Slip")),
+                                        child: const Text("Add Slip")),
                                     const SizedBox(
                                       height: 20,
                                     ),
                                     TextFormField(
-                                      controller: singleOrderController.creditAmountController,
+                                      controller: singleOrderController
+                                          .creditAmountController,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
                                           return 'enter credit amount';
@@ -363,7 +541,8 @@ class _DealerPlaceOrderMobilePageState
                                       height: 20,
                                     ),
                                     TextFormField(
-                                      controller: singleOrderController.rentAmountController,
+                                      controller: singleOrderController
+                                          .rentAmountController,
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
                                           return 'enter rent amount';
@@ -376,72 +555,26 @@ class _DealerPlaceOrderMobilePageState
                                           hintText: 'Enter Rent Amount',
                                           border: OutlineInputBorder()),
                                     ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
                                   ],
                                 ),
                             ],
                           ),
-                          const SizedBox(height: 20),
                           if (outerIndex ==
                               singleOrderController.stops.length - 1)
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              mainAxisSize: MainAxisSize.min,
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                ElevatedButton(
-                                  onPressed: address < 4
-                                      ? () {
-                                    if (_formKey.currentState!
-                                        .validate()) {
-                                      setState(() {
-                                        singleOrderController.stops
-                                            .add(StopController(
-                                          stopNameController:
-                                          TextEditingController(),
-                                          stopContactController:
-                                          TextEditingController(),
-                                          products: [
-                                            ProductController(
-                                              productName:
-                                              TextEditingController(),
-                                              productPrice:
-                                              TextEditingController(),
-                                              productQuantity:
-                                              TextEditingController(),
-                                            ),
-                                          ],
-                                        ));
-                                        address++;
-                                      });
-                                    }
-                                  }
-                                      : null,
-                                  child: const Text("Add More Stop"),
-                                ),
-                                const SizedBox(height: 10),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                if (address > 1)
-                                  ElevatedButton(
+                                OutlinedButton(
                                     onPressed: () {
-                                      setState(() {
-                                        singleOrderController.stops
-                                            .removeLast();
-                                        address--;
-                                      });
+                                      if (_formKey.currentState!.validate()) {
+                                        placeOrder();
+                                      }
                                     },
-                                    child: const Text("Remove Last Stop"),
-                                  ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    placeOrder();
-                                  },
-                                  child: const Text('Place Order'),
-                                ),
+                                    child: const Text("Place Order")),
                               ],
                             ),
                         ],

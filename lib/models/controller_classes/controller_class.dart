@@ -5,13 +5,19 @@ class SingleOrderController {
   TextEditingController bankAmountController;
   TextEditingController creditAmountController;
   TextEditingController rentAmountController;
+  TextEditingController bankNameController;
+  TextEditingController bankReciptController;
+  TextEditingController ibanNoController;
 
 
   SingleOrderController({
+    required this.ibanNoController,
     required this.stops,
     required this.bankAmountController,
     required this.creditAmountController,
     required this.rentAmountController,
+    required this.bankNameController,
+    required this.bankReciptController,
   });
 
   TextEditingController calculateOrderTotals() {
@@ -20,7 +26,7 @@ class SingleOrderController {
     double total = 0.0;
     for (StopController stop in stops) {
       if (stop.calculateStopQuantity().text != '') {
-        total += double.parse(stop.calculateStopQuantity().text);
+        total += double.parse(stop.calculateStopTotal().text);
       }
     }
     orderTotalController.text = total.toString();
@@ -37,7 +43,6 @@ class SingleOrderController {
       }
     }
     orderQuantityController.text = totalQuantity.toString();
-
     return orderQuantityController;
   }
 }
@@ -69,7 +74,6 @@ class StopController {
 
   TextEditingController calculateStopQuantity() {
     TextEditingController stopQuantityController = TextEditingController();
-
     double totalQuantity = 0;
     for (ProductController product in products) {
       if (product.productQuantity.text != '') {
@@ -77,7 +81,6 @@ class StopController {
       }
     }
     stopQuantityController.text = totalQuantity.toString();
-
     return stopQuantityController;
   }
 }

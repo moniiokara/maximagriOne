@@ -1,8 +1,11 @@
 
+
 import 'dart:io';
+import 'dart:math';
 
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -18,7 +21,6 @@ class NotificationServices {
 
 
 
-  //function to initialise flutter local notification plugin to show notifications for android when app is active
   void initLocalNotifications(BuildContext context, RemoteMessage message)async{
     var androidInitializationSettings = const AndroidInitializationSettings('@mipmap/ic_launcher');
     var iosInitializationSettings = const DarwinInitializationSettings();
@@ -37,13 +39,10 @@ class NotificationServices {
     );
   }
 
+
+
   void firebaseInit(BuildContext context){
-
-
-
-
     FirebaseMessaging.onMessage.listen((message) {
-
       RemoteNotification? notification = message.notification ;
       AndroidNotification? android = message.notification!.android ;
 
@@ -62,8 +61,13 @@ class NotificationServices {
         initLocalNotifications(context, message);
         showNotification(message);
       }
+    }).onError((error){
+      if (kDebugMode) {
+        print('FirebaseMessaging.onMessage error: $error');
+      }
     });
   }
+
 
 
   void requestNotificationPermission() async {
@@ -107,16 +111,16 @@ class NotificationServices {
     );
 
     AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
-        channel.id.toString(),
+        'channel_id_5',
         channel.name.toString() ,
         channelDescription: 'your channel description',
         importance: Importance.high,
         priority: Priority.high ,
         playSound: true,
         ticker: 'ticker' ,
-        sound: channel.sound
-      //     sound: RawResourceAndroidNotificationSound('jetsons_doorbell')
-      //  icon: largeIconPath
+        //sound: channel.sound,
+        sound: RawResourceAndroidNotificationSound('jetsons_doorbell'),
+    //  icon: largeIconPath
     );
 
     const DarwinNotificationDetails darwinNotificationDetails = DarwinNotificationDetails(

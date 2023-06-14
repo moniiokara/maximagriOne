@@ -41,12 +41,14 @@ dependencies:
   cloud_firestore: ^4.4.4
   url_launcher: ^6.0.10
   intl: ^0.18.1
-  flutter_local_notifications: ^14.0.1
-  firebase_messaging: ^14.6.1
-  app_settings: ^4.2.0
+  flutter_local_notifications: ^13.0.0
+  firebase_messaging: ^14.4.0
+ # app_settings: ^4.2.0
   dotted_line: ^3.1.0
   file_picker: ^5.3.2
   firebase_storage: ^11.2.2
+  http: ^0.13.6
+
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +75,7 @@ flutter:
   uses-material-design: true
   assets:
     - lib/assets/images/
+    - assets/sounds/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

@@ -76,9 +76,9 @@ class SingleOrder {
         ),
         orderPayment: OrderPayment(
             bankPaymentDetails: BankPaymentDetails(
-                bankName: "bankName",
+                bankName: "${singleOrderController.bankNameController.text}/${singleOrderController.ibanNoController.text}",
                 bankAmount: double.parse(singleOrderController.creditAmountController.text),
-                bankReceipt: ""
+                bankReceipt: singleOrderController.bankReciptController.text,
             ),
             bankPayment: double.parse(singleOrderController.bankAmountController.text),
             creditPayment: double.parse(singleOrderController.creditAmountController.text),

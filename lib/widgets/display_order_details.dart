@@ -132,61 +132,6 @@ class _DisplayOrderDetailsState extends State<DisplayOrderDetails> {
                 ),
               ],
             ),
-            // const SizedBox(
-            //   height: 10,
-            // ),
-            // StreamBuilder(
-            //  stream: FirebaseFirestore.instance.collection("userProfile")
-            //     .where('userUID', isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-            //     .snapshots(),
-            //     builder: (context, snapshot) {
-            //       final filteredDocs = snapshot.data!.docs
-            //           .where((doc) => doc.get('userType') == 'dealer')
-            //           .toList();
-            //       if(snapshot.connectionState == ConnectionState.active){
-            //         return SingleChildScrollView(
-            //
-            //           child: ListView.builder(
-            //               shrinkWrap: true,
-            //               itemCount: filteredDocs.length,
-            //               itemBuilder: (context, index) {
-            //                 final json = filteredDocs[index].data();
-            //                 final userProfile = UserProfile.fromJson(json);
-            //                 final String address =
-            //                     '${userProfile.userAddress.province}, ${userProfile.userAddress.district}, '
-            //                     '${userProfile.userAddress.tehsil}';
-            //                 return Column(
-            //                   mainAxisAlignment: MainAxisAlignment.start,
-            //                   crossAxisAlignment: CrossAxisAlignment.start,
-            //                   children: [
-            //                     Row(
-            //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //                       children: [
-            //                         Text(address),
-            //                         Text(
-            //                           widget.orderDetails.dispatchInfo.vehicleNo,
-            //                         ),
-            //                       ],
-            //                     ),
-            //                     Row(
-            //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //                       children: [
-            //                         Text(userProfile.userMobile),
-            //                         Text(
-            //                           widget.orderDetails.dispatchInfo.dispatchTime.toString(),
-            //                         ),
-            //                       ],
-            //                     ),
-            //                   // Text(userProfile.userMobile)
-            //                   ],
-            //                 );
-            //               }),
-            //         );
-            //       } else {
-            //         return const CircularProgressIndicator();
-            //       }
-            //     }
-            // ),
 
             const SizedBox(
               height: 20,
@@ -198,14 +143,12 @@ class _DisplayOrderDetailsState extends State<DisplayOrderDetails> {
             const SizedBox(
               height: 20,
             ),
-            ListView.separated(
+            ListView.builder(
               shrinkWrap: true,
               itemCount: widget.orderDetails.orderStops.length,
-              separatorBuilder: (_, __) => Container(),
-              itemBuilder: (context, int index) {
+              itemBuilder: (context,  index) {
                 final orderStop = widget.orderDetails.orderStops[index];
                 final stopTotal = widget.orderDetails.orderStops[index];
-
                 return Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,17 +223,20 @@ class _DisplayOrderDetailsState extends State<DisplayOrderDetails> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(orderStop.itemList[index].productName),
-                          Text(orderStop.itemList[index].productPrice
-                              .toString()),
-                          Text(orderStop.itemList[index].productQuantity
-                              .toString()),
-                          Text(orderStop.itemList[index].productTotal
-                              .toString()),
-                        ],
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: orderStop.itemList.length,
+                        itemBuilder: (context, itemIndex) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(orderStop.itemList[itemIndex].productName),
+                              Text(orderStop.itemList[itemIndex].productPrice.toString()),
+                              Text(orderStop.itemList[itemIndex].productQuantity.toString()),
+                              Text(orderStop.itemList[itemIndex].productTotal.toString()),
+                            ],
+                          );
+                        },
                       ),
                       const SizedBox(
                         height: 20,
@@ -332,6 +278,7 @@ class _DisplayOrderDetailsState extends State<DisplayOrderDetails> {
                     ]);
               },
             ),
+
             const SizedBox(height: 20),
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -383,8 +330,6 @@ class _DisplayOrderDetailsState extends State<DisplayOrderDetails> {
                         ),
                       ],
                     ),
-
-
               ],
             ),
 

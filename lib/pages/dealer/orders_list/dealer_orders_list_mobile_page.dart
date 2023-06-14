@@ -35,7 +35,7 @@ class _DealerOrdersListMobilePageState
       body: SafeArea(
         child: StreamBuilder(
             stream: FirebaseFirestore.instance
-                .collection('ordersList')
+                .collection('ordersFirst')
                 .where('dealerUID',
                     isEqualTo: FirebaseAuth.instance.currentUser?.uid)
                 .snapshots(),
