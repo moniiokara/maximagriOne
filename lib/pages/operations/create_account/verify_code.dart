@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:maximagri/pages/operations/dashboard/operations_dashboard_mobile_page.dart';
 
 class VerifyCodeScreen extends StatefulWidget {
-  final String verificationId;
+  // final String verificationId;
 
-  const VerifyCodeScreen({Key? key, required this.verificationId})
+  const VerifyCodeScreen({Key? key, })
       : super(key: key);
 
   @override
@@ -36,23 +36,23 @@ class _VerifyCodeScreenState extends State<VerifyCodeScreen> {
               height: 20,
             ),
             InkWell(
-              onTap: () async {
-                final credential = PhoneAuthProvider.credential(
-                    verificationId: widget.verificationId,
-                    smsCode: phoneController.text);
-
-                try {
-                  await _auth.signInWithCredential(credential);
-                  // ignore: use_build_context_synchronously
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const OperationsDashboardMobilePage()));
-                } catch (e) {
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(e.toString())));
-                }
-              },
+              // onTap: () async {
+              //   final credential = PhoneAuthProvider.credential(
+              //
+              //       smsCode: phoneController.text);
+              //
+              //   try {
+              //     await _auth.signInWithCredential(credential);
+              //     // ignore: use_build_context_synchronously
+              //     Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (_) => const OperationsDashboardMobilePage()));
+              //   } catch (e) {
+              //     ScaffoldMessenger.of(context)
+              //         .showSnackBar(SnackBar(content: Text(e.toString())));
+              //   }
+              // },
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.green,

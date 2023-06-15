@@ -5,6 +5,7 @@ import 'package:maximagri/models/address_model/district_model.dart';
 import 'package:maximagri/models/address_model/province_model.dart';
 import 'package:maximagri/models/user_profile_model/user_address_model.dart';
 import 'package:maximagri/models/user_profile_model/user_profile_model.dart';
+import 'package:maximagri/pages/auth/sign_in/sign_in_mobile_page.dart';
 import 'package:maximagri/pages/operations/create_account/verify_code.dart';
 import 'package:maximagri/widgets/drawer/operations_drawer.dart';
 import 'package:maximagri/widgets/navigation/operations_navigation.dart';
@@ -19,6 +20,7 @@ class OperationsCreateAccountMobilePage extends StatefulWidget {
 
 class _OperationsCreateAccountMobilePageState
     extends State<OperationsCreateAccountMobilePage> {
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController cnicController = TextEditingController();
@@ -26,6 +28,8 @@ class _OperationsCreateAccountMobilePageState
   final TextEditingController districtController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final TextEditingController townController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   void dispose() {
@@ -96,7 +100,6 @@ class _OperationsCreateAccountMobilePageState
 
   @override
   void initState() {
-
     super.initState();
     fetchZonalManagers();
   }
@@ -109,7 +112,7 @@ class _OperationsCreateAccountMobilePageState
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final _fromKey = GlobalKey<FormState>();
 
-  static final List<Province> _provinces = [
+   final List<Province> _provinces = [
     Province(provinceName: 'America', districtsList: [
       District(
         districtName: 'Kalat',
@@ -138,9 +141,82 @@ class _OperationsCreateAccountMobilePageState
   String? _selectedDistrict;
   String? _selectedCity;
 
+  // void _createAccount() async {
+  //   if (_fromKey.currentState!.validate()) {
+  //     if (_auth.currentUser != null) {
+  //       final user = UserProfile(
+  //         operationsUID: '',
+  //         zonalManagerUID: '',
+  //         salesManagerUID: '',
+  //         salesOfficerUID: '',
+  //         userName: nameController.text,
+  //         userMobile: int.parse(phoneController.text).toString(),
+  //         userCNIC:
+  //             int.parse(cnicController.text.replaceAll('-', '')).toString(),
+  //         userType: 'Dealer',
+  //         userUID: _auth.currentUser!.uid,
+  //         userStatus: true,
+  //         userAddress: UserAddress(
+  //           province: _selectedProvinces!,
+  //           district: _selectedDistrict!,
+  //           tehsil: _selectedCity!,
+  //         ),
+  //       );
+  //       _firestore
+  //           .collection("Profile")
+  //           .doc()
+  //           .set(user.toJson())
+  //           .then((value) => print("Successfully data Add"))
+  //           .then((value) {
+  //         // Navigator.push(
+  //         //     context, MaterialPageRoute(builder: (_) => LoginScreen()));
+  //       })
+  //           .then((value) async {
+  //         await _auth.verifyPhoneNumber(
+  //             timeout: const Duration(seconds: 60),
+  //             phoneNumber: phoneController.text,
+  //             verificationCompleted: (_) {},
+  //             verificationFailed: (FirebaseAuthException e) {
+  //               if (e.code == 'invalid-phone-number') {
+  //                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+  //                     content:
+  //                         Text('The provided phone number is not valid.')));
+  //               } else {
+  //                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //                     content: Text(
+  //                         'Phone number verification failed: ${e.message}')));
+  //               }
+  //             },
+  //             codeSent: (String verificationId, int? resendToken) {
+  //               Navigator.push(
+  //                   context,
+  //                   MaterialPageRoute(
+  //                       builder: (_) =>
+  //                           VerifyCodeScreen(verificationId: verificationId)));
+  //             },
+  //             codeAutoRetrievalTimeout: (e) {
+  //               ScaffoldMessenger.of(context)
+  //                   .showSnackBar(SnackBar(content: Text(e.toString())));
+  //             });
+  //       });
+  //     }
+  //   }
+  // }
+
+  bool _isCreatingAccount = false;
+
   void _createAccount() async {
     if (_fromKey.currentState!.validate()) {
-      if (_auth.currentUser != null) {
+      setState(() {
+        _isCreatingAccount = true;
+      });
+      try {
+
+        await FirebaseAuth.instance.signOut();
+        final userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
         final user = UserProfile(
           operationsUID: '',
           zonalManagerUID: '',
@@ -148,10 +224,9 @@ class _OperationsCreateAccountMobilePageState
           salesOfficerUID: '',
           userName: nameController.text,
           userMobile: int.parse(phoneController.text).toString(),
-          userCNIC:
-              int.parse(cnicController.text.replaceAll('-', '')).toString(),
+          userCNIC: int.parse(cnicController.text.replaceAll('-', '')).toString(),
           userType: 'Dealer',
-          userUID: _auth.currentUser!.uid,
+          userUID: userCredential.user!.uid,
           userStatus: true,
           userAddress: UserAddress(
             province: _selectedProvinces!,
@@ -159,45 +234,33 @@ class _OperationsCreateAccountMobilePageState
             tehsil: _selectedCity!,
           ),
         );
-        _firestore
+        await _firestore
             .collection("Profile")
             .doc()
-            .set(user.toJson())
-            .then((value) => print("Successfully data Add"))
-            .then((value) {
-          // Navigator.push(
-          //     context, MaterialPageRoute(builder: (_) => LoginScreen()));
-        }).then((value) async {
-          await _auth.verifyPhoneNumber(
-              timeout: const Duration(seconds: 60),
-              phoneNumber: phoneController.text,
-              verificationCompleted: (_) {},
-              verificationFailed: (FirebaseAuthException e) {
-                if (e.code == 'invalid-phone-number') {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content:
-                          Text('The provided phone number is not valid.')));
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                          'Phone number verification failed: ${e.message}')));
-                }
-              },
-              codeSent: (String verificationId, int? resendToken) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) =>
-                            VerifyCodeScreen(verificationId: verificationId)));
-              },
-              codeAutoRetrievalTimeout: (e) {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(e.toString())));
-              });
+            .set(user.toJson());
+        print("Successfully data Add");
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Successfully data Add")));
+       Navigator.push(context, MaterialPageRoute(builder: (_) => VerifyCodeScreen()));
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          print('The password provided is too weak.');
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("The password provided is too weak")));
+        } else if (e.code == 'email-already-in-use') {
+          print('The account already exists for that email.');
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("email-already-in-use")));
+        }
+      } catch (e) {
+        print(e);
+        ScaffoldMessenger.of(context).showSnackBar( SnackBar(content: Text(e.toString())));
+      }
+      finally {
+        setState(() {
+          _isCreatingAccount = false;
         });
       }
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -238,7 +301,48 @@ class _OperationsCreateAccountMobilePageState
                         ),
                       ),
                     ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextFormField(
+                        maxLines: 1,
+                        controller: emailController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Email is required';
+                          }
+                          return null;
+                        },
 
+                        decoration: const InputDecoration(
+                          labelText: 'Enter Email',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextFormField(
+                        controller: passwordController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Password is required';
+                          }
+                          return null;
+                        },
+                        keyboardType: TextInputType.visiblePassword,
+
+                        decoration: const InputDecoration(
+                          labelText: 'Enter Password',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
                     const SizedBox(
                       height: 16,
                     ),
@@ -271,9 +375,10 @@ class _OperationsCreateAccountMobilePageState
                           final cnicExp = RegExp(r'^\d{5}-\d{7}-\d{1}$');
                           if (value == null || value.isEmpty) {
                             return 'CNIC number is required';
-                          } else if (!cnicExp.hasMatch(value)) {
-                            return 'Please enter a valid CNIC number';
                           }
+                          // else if (!cnicExp.hasMatch(value)) {
+                          //   return 'Please enter a valid CNIC number';
+                          // }
                           return null;
                         },
                         controller: cnicController,
@@ -477,7 +582,7 @@ class _OperationsCreateAccountMobilePageState
                           color: Colors.green,
                         ),
                         child: Center(
-                          child: Text(
+                          child: _isCreatingAccount ? const CircularProgressIndicator(color: Colors.white,) : Text(
                             "Create Account",
                             style: TextStyle(
                               fontSize: 28,

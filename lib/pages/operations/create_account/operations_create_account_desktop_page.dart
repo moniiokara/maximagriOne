@@ -184,11 +184,7 @@ class _OperationsCreateAccountDesktopPageState
                 }
               },
               codeSent: (String verificationId, int? resendToken) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) =>
-                            VerifyCodeScreen(verificationId: verificationId)));
+
               },
               codeAutoRetrievalTimeout: (e) {
                 ScaffoldMessenger.of(context)

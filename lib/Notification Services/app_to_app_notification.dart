@@ -19,7 +19,6 @@ class _AppToAppNotificationState extends State<AppToAppNotification> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     notificationServices.requestNotificationPermission();
     notificationServices.forgroundMessage();
@@ -41,17 +40,16 @@ class _AppToAppNotificationState extends State<AppToAppNotification> {
         title: const Text('Flutter Notifications'),
       ),
       body: Center(
-        child: TextButton(onPressed: (){
-
+        child: OutlinedButton(onPressed: (){
 
           notificationServices.getDeviceToken().then((value)async{
-
             var data = {
               'to' : value.toString(),
               'notification' : {
-                'title' : 'Noman' ,
-                'body' : 'Flutters' ,
+                'title' : 'Flutter Developer Notification Title' ,
+                'body' : 'Flutter Developer Notification Message from App to App' ,
                 "sound": "jetsons_doorbell"
+
               },
               'android': {
                 'notification': {
@@ -60,7 +58,7 @@ class _AppToAppNotificationState extends State<AppToAppNotification> {
               },
               'data' : {
                 'type' : 'msj' ,
-                'id' : 'Asif Taj'
+                'id' : 'Noman Ashraf'
               }
             };
 
@@ -81,7 +79,7 @@ class _AppToAppNotificationState extends State<AppToAppNotification> {
             });
           });
         },
-            child: Text('Send Notifications')),
+            child: const Text('Send Notifications')),
       ),
     );
   }

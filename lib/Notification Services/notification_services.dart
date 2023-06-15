@@ -91,7 +91,6 @@ class NotificationServices {
         print('user granted provisional permission');
       }
     } else {
-      //appsetting.AppSettings.openNotificationSettings();
       if (kDebugMode) {
         print('user denied permission');
       }
